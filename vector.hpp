@@ -6,7 +6,7 @@
 /*   By: jjosephi <jjosephi@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/25 00:03:05 by jjosephi          #+#    #+#             */
-/*   Updated: 2020/04/26 00:11:03 by jjosephi         ###   ########.fr       */
+/*   Updated: 2020/04/26 14:48:18 by jjosephi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,21 +202,28 @@ public:
 	}
 
 	//Removes from the vector either a single element (position) or a range of elements ([first,last)).
-	Iterator erase (size_t position)
+	Iterator erase (size_t n)
 	{
-		size--;
-		delete vector[position];
-		for (position; position ++; position != size)
+		if (n > cacpicty)
+			return nullptr
+		delete ptr[n];
+        for(size_t i = n; i < size - 1; i++)
+        {
+            ptr[i] = ptr[i + 1];   //  Shift all the elements one step left, beginning from "pos+1"
+        }
+        size--;
+		return new Iterator((ptr + i)&);
 	}
 	
-	Iterator erase (Iterator first, Iterator last)
+	reverse_iterator rbegin()//Returns a reverse iterator pointing to the last element in the vector (i.e., its reverse beginning).
 	{
 		
 	}
 	
-	reverse_iterator rbegin();//Returns a reverse iterator pointing to the last element in the vector (i.e., its reverse beginning).
-	
 	reverse_iterator rend();//Returns a reverse iterator pointing to the theoretical element preceding the first element in the vector
+	{
+		
+	}
 	
 	void assign (Iterator first, Iterator last);//Assigns new contents to the vector, replacing its current contents, and modifying its size accordingly.
 	{
@@ -236,7 +243,13 @@ public:
 	
 	void assign (size_type n, const value_type& val)
 	{
-		
+		if (n > capacity)
+			reserve(n);
+		for(i = 0; i++; i < n)
+		{
+			ptr[i] = val;	
+		}
+		size = n;
 	}
 	
 	void push_back (const value_type& val) //Adds a new element at the end of the vector, after its current last element
