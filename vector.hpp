@@ -6,7 +6,7 @@
 /*   By: jjosephi <jjosephi@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/25 00:03:05 by jjosephi          #+#    #+#             */
-/*   Updated: 2020/04/25 19:43:40 by jjosephi         ###   ########.fr       */
+/*   Updated: 2020/04/25 21:16:24 by jjosephi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,13 +134,22 @@ public:
 	
 	size_type capacity() {return capacity;} //Returns the size of the storage space currently allocated for the vector, expressed in terms of elements.
 	
-	void reserve (size_type n);//Requests that the vector capacity be at least enough to contain n elements.
+	void reserve (size_type n)//Requests that the vector capacity be at least enough to contain n elements.
+	{
+		if (n > capacity)
+		{
+			T* tmp = new T[n];
+			std::copy(ptr, ptr + capacity, tmo)
+			delete[] ptr;
+			capcity = n;
+		}
+	}
 	
 	reference front() {return ptr[0]&;}//Returns a reference to the first element in the vector.
 	
-	reference back() {return ptr[length]&;}//back
+	reference back() {return ptr[length];}//back
 	
-	reference operator[] (size_type n){return ptr[n]&;}//Returns a reference to the element at position n in the vector container.
+	reference operator[] (size_type n){return ptr[n];}//Returns a reference to the element at position n in the vector container.
 	
 	vector& operator= (const vector& x); //Assigns new contents to the container, replacing its current contents, and modifying its size accordingly
 	
@@ -154,7 +163,10 @@ public:
 	
 	void assign (Iterator first, Iterator last);//Assigns new contents to the vector, replacing its current contents, and modifying its size accordingly.
 	
-	void assign (size_type n, const value_type& val);
+	void assign (size_type n, const value_type& val)
+	{
+		ptr[i] = val;
+	}
 	
 	//The vector is extended by inserting new elements before the element at the specified position
 	Iterator insert (Iterator position, const value_type& val);	
@@ -166,11 +178,25 @@ public:
 	
 	Iterator erase (Iterator first, Iterator last);
 	
-	void push_back (const value_type& val);//Adds a new element at the end of the vector, after its current last element
+	void push_back (const value_type& val) //Adds a new element at the end of the vector, after its current last element
+	{
+		if (size == capacity)
+			reserve(size + 1);
+		ptr[size + 1] = val;
+	}
 	
-	void pop_back();//Removes the last element in the vector, effectively reducing the container size by one4
+	void pop_back()//Removes the last element in the vector, effectively reducing the container size by one4
+	{
+		delete ptr[size];
+		size--;
+	}
 	
-	void clear();//Removes all elements from the vector (which are destroyed), leaving the container with a size of 0.
+	void clear();//Removes all elements from the vector (which are destroyed), leaving the container with a size of 0.4
+	{
+		for (i = size; i--; i == 0)
+			delete ptr[i];
+		size = 0;
+	}
 	
 	void swap (vector& x); //Exchanges the content of the container by the content of x, which is another vector object of the same type
 	
