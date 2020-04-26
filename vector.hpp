@@ -6,7 +6,7 @@
 /*   By: jjosephi <jjosephi@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/25 00:03:05 by jjosephi          #+#    #+#             */
-/*   Updated: 2020/04/25 19:25:43 by jjosephi         ###   ########.fr       */
+/*   Updated: 2020/04/25 19:43:40 by jjosephi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,8 @@ private:
 	T *ptr;
 	Allocator<T> alloc;
 public:
+	using reference  = T&;
+	
 	vector(const Allocator& alloc = T) : ptr(NULL), length(0),capacity(0)){} //Constructor
 	
 	~vector();							//Destructor
@@ -134,15 +136,21 @@ public:
 	
 	void reserve (size_type n);//Requests that the vector capacity be at least enough to contain n elements.
 	
-	T& front() {return ptr[0]&;}//Returns a T& to the first element in the vector.
+	reference front() {return ptr[0]&;}//Returns a reference to the first element in the vector.
 	
-	T& back() {return ptr[length]&;}//back
+	reference back() {return ptr[length]&;}//back
 	
-	T& operator[] (size_type n){return ptr[n]&;}//Returns a T& to the element at position n in the vector container.
+	reference operator[] (size_type n){return ptr[n]&;}//Returns a reference to the element at position n in the vector container.
 	
 	vector& operator= (const vector& x); //Assigns new contents to the container, replacing its current contents, and modifying its size accordingly
 	
-	T& at (size_type n);//Position of an element in the container. OOR exceptions
+	reference at (size_type n)//Position of an element in the container. OOR exceptions
+	{
+		if (n >= length)
+			std::out_of_range("");
+		else
+			return ptr[n];
+	}
 	
 	void assign (Iterator first, Iterator last);//Assigns new contents to the vector, replacing its current contents, and modifying its size accordingly.
 	
