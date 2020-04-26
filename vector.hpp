@@ -6,7 +6,7 @@
 /*   By: jjosephi <jjosephi@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/25 00:03:05 by jjosephi          #+#    #+#             */
-/*   Updated: 2020/04/26 14:48:18 by jjosephi         ###   ########.fr       */
+/*   Updated: 2020/04/26 14:56:29 by jjosephi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,15 +65,60 @@ public:
     bool operator==(const Iterator &r) const {return i == r.i;}
 	size_t index(){return i;}
 };
+class Reverse_Iterator
+{
+
 private:
-	size_t length;
+    vector<T>* v;
+    int        i;
+public:
+    using value_type = T;
+    using pointer    = T*;
+    using reference  = T&;
+    using difference_type = std::ptrdiff_t;
+    using iterator_category = std::random_access_iterator_tag;
+
+    Iterator():                    v(nullptr), i(0) {}   
+    Iterator(Vector<T>* v, int i): v(v),       i(i) {}
+
+    reference       operator*()             {return (*v)[i];}
+    const reference operator*()       const {return (*v)[i];}
+    pointer         operator->()            {return &((*v)[i]);}
+    const pointer   operator->()      const {return &((*v)[i]);}
+    reference       operator[](int m)       {return (*v)[i + m];}
+    const reference operator[](int m) const {return (*v)[i + m];}
+
+
+    Iterator& operator++()       {--i;return *this;}
+    Iterator& operator--()       {++;return *this;}
+    Iterator  operator++(int)    {Iterator r(*this);--i;return r;}
+    Iterator  operator--(int)    {Iterator r(*this);++i;return r;}
+
+    Iterator& operator+=(int n)  {i -= n;return *this;}
+    Iterator& operator-=(int n)  {i += n;return *this;}
+
+    Iterator operator+(int n)   const {Iterator r(*this);return r -= n;}
+    Iterator operator-(int n)   const {Iterator r(*this);return r += n;}
+
+    difference_type operator-(Iterator const& r) const {return i - r.i;}
+
+    bool operator<(Iterator const& r)  const {return i <  r.i;}
+    bool operator<=(Iterator const& r) const {return i <= r.i;}
+    bool operator>(Iterator const& r)  const {return i >  r.i;}
+    bool operator>=(Iterator const& r) const {return i >= r.i;}
+    bool operator!=(const Iterator &r) const {return i != r.i;}
+    bool operator==(const Iterator &r) const {return i == r.i;}
+	size_t index(){return i;}
+};
+private:
+	size_t size;
 	size_t capcity;
 	T *ptr;
 	Allocator<T> alloc;
 public:
 	using reference  = T&;
 	
-	vector(const Allocator& alloc = T) : ptr(NULL), length(0),capacity(0)){} //Constructor
+	vector(const Allocator& alloc = T) : ptr(NULL), size(0),capacity(0)){} //Constructor
 	
 	~vector();							//Destructor
 	
@@ -83,18 +128,17 @@ public:
 	
 	vector::vector()
 	{
-		length = 0;
+		size = 0;
 		capacity = 0;
 		ptr = Allocator.allocate(len);
-		it = Iterator();
 	}
 
 	vector::~vector()
 	{
 	//	delete[] ptr;
-		ptr = Allocator.deallocate(ptr, length);
+		ptr = Allocator.deallocate(ptr, size);
 		ptr = nullptr;
-		length = 0;
+		size = 0;
 		capacity = 0;
 	}
 
@@ -102,12 +146,12 @@ public:
 	{
 		ptr = new T[cpy.capacity()];
         std::copy(&other[0], &other[other.size()], ptr);
-        length = cpy.size();
+        size = cpy.size();
 	}
 
 	vector::vector(size_type n, const T& val)
 	{
-		length = n;
+		size = n;
 		capacity = n;
 		ptr = Allocator.allocate(n);
 		if (n > 0)
@@ -117,14 +161,14 @@ public:
 	
 	iterator begin(){return new Iterator(vector, 0);}// Returns an iterator pointing to the first element in the vector.
 	
-	iterator end(){return new Iterator(vector, length);}//Returns an iterator referring to the past-the-end element in the vector container.
+	iterator end(){return new Iterator(vector, size);}//Returns an iterator referring to the past-the-end element in the vector container.
 	
 	
-	size_type size(){return length;}//Returns the number of elements in the vector.
+	size_type size(){return size;}//Returns the number of elements in the vector.
 	
 	size_type max_size() {return ??;}//Returns the maximum number of elements that the vector can hold.
 	
-	bool empty() {return length == 0;}//is size 0?
+	bool empty() {return size == 0;}//is size 0?
 	
 	void resize(size_t n)//Resizes the container so that it contains n elements.
 	{
@@ -154,7 +198,7 @@ public:
 	
 	reference front() {return ptr[0]&;}//Returns a reference to the first element in the vector.
 	
-	reference back() {return ptr[length];}//back
+	reference back() {return ptr[size];}//back
 	
 	reference operator[] (size_type n){return ptr[n];}//Returns a reference to the element at position n in the vector container.
 	
@@ -167,7 +211,7 @@ public:
 	
 	reference at (size_type n)//Position of an element in the container. OOR exceptions
 	{
-		if (n >= length)
+		if (n >= size)
 			std::out_of_range("");
 		else
 			return ptr[n];
@@ -204,7 +248,7 @@ public:
 	//Removes from the vector either a single element (position) or a range of elements ([first,last)).
 	Iterator erase (size_t n)
 	{
-		if (n > cacpicty)
+		if (n > capacity)
 			return nullptr
 		delete ptr[n];
         for(size_t i = n; i < size - 1; i++)
@@ -212,17 +256,17 @@ public:
             ptr[i] = ptr[i + 1];   //  Shift all the elements one step left, beginning from "pos+1"
         }
         size--;
-		return new Iterator((ptr + i)&);
+		return new Iterator(vector, i);
 	}
 	
 	reverse_iterator rbegin()//Returns a reverse iterator pointing to the last element in the vector (i.e., its reverse beginning).
 	{
-		
+		return new Reverse_Iterator(vector, size)
 	}
 	
 	reverse_iterator rend();//Returns a reverse iterator pointing to the theoretical element preceding the first element in the vector
 	{
-		
+		return new Reverse_Iterator(vector, -1);
 	}
 	
 	void assign (Iterator first, Iterator last);//Assigns new contents to the vector, replacing its current contents, and modifying its size accordingly.
