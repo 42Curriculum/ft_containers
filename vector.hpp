@@ -6,7 +6,7 @@
 /*   By: jjosephi <jjosephi@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/25 00:03:05 by jjosephi          #+#    #+#             */
-/*   Updated: 2020/04/25 21:16:24 by jjosephi         ###   ########.fr       */
+/*   Updated: 2020/04/26 00:11:03 by jjosephi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ public:
     bool operator>=(Iterator const& r) const {return i >= r.i;}
     bool operator!=(const Iterator &r) const {return i != r.i;}
     bool operator==(const Iterator &r) const {return i == r.i;}
+	size_t index(){return i;}
 };
 private:
 	size_t length;
@@ -79,8 +80,6 @@ public:
 	vector(const vector& cpy);			//Copy Constructor
 	
 	vector (size_type n, const T& val); //Fill Constructor
-
-
 	
 	vector::vector()
 	{
@@ -120,9 +119,6 @@ public:
 	
 	iterator end(){return new Iterator(vector, length);}//Returns an iterator referring to the past-the-end element in the vector container.
 	
-	reverse_iterator rbegin();//Returns a reverse iterator pointing to the last element in the vector (i.e., its reverse beginning).
-	
-	reverse_iterator rend();//Returns a reverse iterator pointing to the theoretical element preceding the first element in the vector
 	
 	size_type size(){return length;}//Returns the number of elements in the vector.
 	
@@ -130,7 +126,18 @@ public:
 	
 	bool empty() {return length == 0;}//is size 0?
 	
-	void resize (size_type n, value_type val = value_type());//Resizes the container so that it contains n elements.
+	void resize(size_t n)//Resizes the container so that it contains n elements.
+	{
+		if (size > n)
+			size = n;
+		else if (n <= capacity)
+			size = n;
+		else
+		{
+			reserve(n);
+			size = n;
+		}
+	}
 	
 	size_type capacity() {return capacity;} //Returns the size of the storage space currently allocated for the vector, expressed in terms of elements.
 	
@@ -151,7 +158,12 @@ public:
 	
 	reference operator[] (size_type n){return ptr[n];}//Returns a reference to the element at position n in the vector container.
 	
-	vector& operator= (const vector& x); //Assigns new contents to the container, replacing its current contents, and modifying its size accordingly
+	vector& operator= (const vector& x) //Assigns new contents to the container, replacing its current contents, and modifying its size accordingly
+	{
+		if (x::size() > this.size)
+			resize(x::size());
+		size = x::size();
+	}
 	
 	reference at (size_type n)//Position of an element in the container. OOR exceptions
 	{
@@ -161,22 +173,71 @@ public:
 			return ptr[n];
 	}
 	
+	
+	//The vector is extended by inserting new elements before the element at the specified position
+	void insert (size_t& pos, size_t& n, T& val)
+	{
+		 if(size < n + capacity)
+            reserve(size + n);
+        size += n;
+        for(size_t i = size - 1; i >= pos + n; i--)
+        {
+            ptr[i] = ptr[i - n];
+        }
+        for(size_t i = pos; i < pos + n; i++)
+        {
+            ptr[i] = val;
+        }
+	}
+	
+    void insert (size_type pos, const value_type& val)
+	{
+		if(capacity == size)
+            reserve(++size);
+        for(size_t i = size - 1; i > pos; i--)
+        {
+            ptr[i]=ptr[i-1];
+        }
+        ptr[pos] = val;
+	}
+
+	//Removes from the vector either a single element (position) or a range of elements ([first,last)).
+	Iterator erase (size_t position)
+	{
+		size--;
+		delete vector[position];
+		for (position; position ++; position != size)
+	}
+	
+	Iterator erase (Iterator first, Iterator last)
+	{
+		
+	}
+	
+	reverse_iterator rbegin();//Returns a reverse iterator pointing to the last element in the vector (i.e., its reverse beginning).
+	
+	reverse_iterator rend();//Returns a reverse iterator pointing to the theoretical element preceding the first element in the vector
+	
 	void assign (Iterator first, Iterator last);//Assigns new contents to the vector, replacing its current contents, and modifying its size accordingly.
+	{
+		size_t n = first::index() - last::index();
+		if (capacity < n)
+			reserve(n);
+		else if (size < n)
+			size = n;
+		int i = 0;
+		for (first; first++; first != last)
+		{
+			vector[i];
+			i++;
+		}
+		return first;
+	}
 	
 	void assign (size_type n, const value_type& val)
 	{
-		ptr[i] = val;
+		
 	}
-	
-	//The vector is extended by inserting new elements before the element at the specified position
-	Iterator insert (Iterator position, const value_type& val);	
-	
-    void insert (Iterator position, size_type n, const value_type& val);
-
-	//Removes from the vector either a single element (position) or a range of elements ([first,last)).
-	Iterator erase (Iterator position);
-	
-	Iterator erase (Iterator first, Iterator last);
 	
 	void push_back (const value_type& val) //Adds a new element at the end of the vector, after its current last element
 	{
@@ -198,7 +259,13 @@ public:
 		size = 0;
 	}
 	
-	void swap (vector& x); //Exchanges the content of the container by the content of x, which is another vector object of the same type
+	void swap (vector& x) //Exchanges the content of the container by the content of x, which is another vector object of the same type
+	[
+		vector tmp1 = new vector(vector);
+		vector tmp2 = new vector(x);
+		x = tmp1;
+		vector = tmp2;
+	]
 	
 };
 
