@@ -6,7 +6,7 @@
 /*   By: jjosephi <jjosephi@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/25 00:03:05 by jjosephi          #+#    #+#             */
-/*   Updated: 2020/04/26 20:57:53 by jjosephi         ###   ########.fr       */
+/*   Updated: 2020/04/27 01:37:07 by jjosephi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <cstdlib>
 #include <memory>
 
-template <typename T, class Allocator = std::allocator<T>>
+template <typename T, typename Allocator = std::allocator<T> >
 class vector
 {
 	class Iterator
@@ -26,18 +26,12 @@ private:
     vector<T>* v;
     int        i;
 public:
-    using value_type = T;
-    using pointer    = T*;
-    using reference  = T&;
-    using difference_type = std::ptrdiff_t;
-    using iterator_category = std::random_access_iterator_tag;
-
-    Iterator():                    v(nullptr), i(0) {}   
+    Iterator():                    v(NULL), i(0) {}   
     Iterator(vector<T>* v, int i): v(v),       i(i) {}
 
-    reference       operator*()             {return (*v)[i];}
-    pointer         operator->()            {return &((*v)[i]);}
-    reference       operator[](int m)       {return (*v)[i + m];}
+    T&       operator*()             {return (*v)[i];}
+    T*         operator->()            {return &((*v)[i]);}
+    T&       operator[](int m)       {return (*v)[i + m];}
 
 
     Iterator& operator++()       {++i;return *this;}
@@ -50,8 +44,6 @@ public:
 
     Iterator operator+(int n)   const {Iterator r(*this);return r += n;}
     Iterator operator-(int n)   const {Iterator r(*this);return r -= n;}
-
-    difference_type operator-(Iterator const& r) const {return i - r.i;}
 
     bool operator<(Iterator const& r)  const {return i <  r.i;}
     bool operator<=(Iterator const& r) const {return i <= r.i;}
@@ -68,18 +60,16 @@ private:
     vector<T>* v;
     int        i;
 public:
-    using value_type = T;
-    using pointer    = T*;
-    using reference  = T&;
-    using difference_type = std::ptrdiff_t;
-    using iterator_category = std::random_access_iterator_tag;
+    using T = T;
+    using T*    = T*;
+    using T&  = T&;
 
-   Reverse_Iterator():                    v(nullptr), i(0) {}   
+   Reverse_Iterator():                    v(NULL), i(0) {}   
    Reverse_Iterator(vector<T>* v, int i): v(v),       i(i) {}
 
-    reference       operator*()             {return (*v)[i];}
-    pointer         operator->()            {return &((*v)[i]);}
-    reference       operator[](int m)       {return (*v)[i + m];}
+    T&       operator*()             {return (*v)[i];}
+    T*         operator->()            {return &((*v)[i]);}
+    T&       operator[](int m)       {return (*v)[i + m];}
 
 
    Reverse_Iterator& operator++()       {--i;return *this;}
@@ -93,8 +83,6 @@ public:
    Reverse_Iterator operator+(int n)   const {Iterator r(*this);return r -= n;}
    Reverse_Iterator operator-(int n)   const {Iterator r(*this);return r += n;}
 
-    difference_type operator-(Iterator const& r) const {return i - r.i;}
-
     bool operator<(Iterator const& r)  const {return i <  r.i;}
     bool operator<=(Iterator const& r) const {return i <= r.i;}
     bool operator>(Iterator const& r)  const {return i >  r.i;}
@@ -104,109 +92,102 @@ public:
 	size_t index(){return i;}
 };
 private:
-	size_t size;
-	size_t capacity;
+	size_t sizes;
+	size_t cap;
 	T *ptr;
+	Allocator al;
 public:
-	using reference  = T&;
-	using value_type = T;
+	using T&  = T&;
+	using T = T;
 	
-	vector(Allocator& alloc = T) { ptr = nullptr, size = 0, capacity = 0;} //Constructor
-	
-	~vector();							//Destructor
-	
-	vector(const vector& cpy);			//Copy Constructor
-	
-	vector (size_t n, const T& val); //Fill Constructor
-	
-	vector::vector()
+	vector(Allocator& al = Allocator())
 	{
-		size = 0;
-		capacity = 0;
-		ptr = Allocator.allocate(size);
+		sizes = 0;
+		cap = 0;
+		ptr = al.allocate(sizes);
 	}
 
-	vector::~vector()
+	~vector()
 	{
 	//	delete[] ptr;
-		ptr = Allocator.deallocate(ptr, size);
-		ptr = nullptr;
-		size = 0;
-		capacity = 0;
+		ptr = al.deallocate(ptr, sizes);
+		ptr = NULL;
+		sizes = 0;
+		cap = 0;
 	}
 
-	vector::vector(const vector& cpy)
+	vector(const vector& cpy)
 	{
 		ptr = new T[cpy.capacity()];
         std::copy(&cpy[0], &cpy[cpy.size()], ptr);
-        size = cpy.size();
+        sizes = cpy.size();
 	}
 
-	vector::vector(size_t n, const T& val)
+	vector(size_t n, const T& val)
 	{
-		size = n;
-		capacity = n;
-		ptr = Allocator.allocate(n);
+		sizes = n;
+		cap = n;
+		ptr = al.allocate(n);
 		if (n > 0)
 			for (size_t i = 0; i < n; i++)
 				ptr[n] = val;
 	}
 	
-	Iterator begin(){return new Iterator(vector, 0);}// Returns an iterator pointing to the first element in the vector.
+	Iterator begin(){return new Iterator(this, 0);}// Returns an iterator pointing to the first element in the this.
 	
-	Iterator end(){return new Iterator(vector, size);}//Returns an iterator referring to the past-the-end element in the vector container.
+	Iterator end(){return new Iterator(this, sizes);}//Returns an iterator referring to the past-the-end element in the vector container.
 	
 	
-	size_t size(){return size;}//Returns the number of elements in the vector.
+	size_t size(){return sizes;}//Returns the number of elements in the vector.
 	
-	bool empty() {return size == 0;}//is size 0?
+	bool empty() {return sizes == 0;}//is sizes 0?
 	
 	void resize(size_t n)//Resizes the container so that it contains n elements.
 	{
-		if (size > n)
-			size = n;
-		else if (n <= capacity)
-			size = n;
+		if (sizes > n)
+			sizes = n;
+		else if (n <= cap)
+			sizes = n;
 		else
 		{
 			reserve(n);
-			size = n;
+			sizes = n;
 		}
 	}
 	
-	size_t capacity() {return capacity;} //Returns the size of the storage space currently allocated for the vector, expressed in terms of elements.
+	size_t capacity() {return cap;} //Returns the sizes of the storage space currently allocated for the vector, expressed in terms of elements.
 	
-	void reserve (size_t n)//Requests that the vector capacity be at least enough to contain n elements.
+	void reserve (size_t n)//Requests that the vector cap be at least enough to contain n elements.
 	{
-		if (n > capacity)
+		if (n > cap)
 		{
 			T* tmp = new T[n];
-			std::copy(ptr, ptr + capacity, tmp);
+			std::copy(ptr, ptr + cap, tmp);
 			delete[] ptr;
-			capacity = n;
+			cap = n;
 		}
 	}
 	
-	reference front() {return ptr[0]&;}//Returns a reference to the first element in the vector.
+	T& front() {return ptr[0];}//Returns a T& to the first element in the vector.
 	
-	reference back() {return ptr[size];}//back
+	T& back() {return ptr[sizes];}//back
 	
-	reference operator[] (size_t n){return ptr[n];}//Returns a reference to the element at position n in the vector container.
+	T& operator[] (size_t n){return ptr[n];}//Returns a T& to the element at position n in the vector container.
 	
-	vector& operator= (vector& x) //Assigns new contents to the container, replacing its current contents, and modifying its size accordingly
+	vector& operator= (vector& x) //Assigns new contents to the container, replacing its current contents, and modifying its sizes accordingly
 	{
-		if (x::size() > this.size)
-			resize(x::size());
-		for(size_t i = 0; i++; i < x::size())
+		if (x.size() > sizes)
+			resize(x.size());
+		for(size_t i = 0; i++; i < x.size())
 		{
 			ptr[i] = x[i];
 		}
-		size = x::size();
+		sizes = x.size();
 	}
 	
-	reference at (size_t n)//Position of an element in the container. OOR exceptions
+	T& at (size_t n)//Position of an element in the container. OOR exceptions
 	{
-		if (n >= size)
+		if (n >= sizes)
 			std::out_of_range("");
 		else
 			return ptr[n];
@@ -216,10 +197,10 @@ public:
 	//The vector is extended by inserting new elements before the element at the specified position
 	void insert (size_t& pos, size_t& n, T& val)
 	{
-		if (size < n + capacity)
-            reserve(size + n);
-        size += n;
-        for (size_t i = size - 1; i >= pos + n; i--)
+		if (sizes < n + cap)
+            reserve(sizes + n);
+        sizes += n;
+        for (size_t i = sizes - 1; i >= pos + n; i--)
         {
             ptr[i] = ptr[i - n];
         }
@@ -229,11 +210,11 @@ public:
         }
 	}
 	
-    void insert (size_t pos, const value_type& val)
+    void insert (size_t pos, const T& val)
 	{
-		if(capacity == size)
-            reserve(++size);
-        for(size_t i = size - 1; i > pos; i--)
+		if(cap == sizes)
+            reserve(++sizes);
+        for(size_t i = sizes - 1; i > pos; i--)
         {
             ptr[i]=ptr[i-1];
         }
@@ -243,34 +224,35 @@ public:
 	//Removes from the vector either a single element (position) or a range of elements ([first,last)).
 	Iterator erase (size_t n)
 	{
-		if (n > capacity)
-			return nullptr;
+		size_t i = n;
+		if (n > cap)
+			return NULL;
 		delete ptr[n];
-        for(size_t i = n; i < size - 1; i++)
+        for(i = n; i < sizes - 1; i++)
         {
             ptr[i] = ptr[i + 1];   //  Shift all the elements one step left, beginning from "pos+1"
         }
-        size--;
-		return new Iterator(vector, i);
+        sizes--;
+		return new Iterator(this, i);
 	}
 	
-	Reverse_Iterator rbegin()//Returns a reverse iterator pointing to the last element in the vector (i.e., its reverse beginning).
+	Reverse_Iterator rbegin()//Returns a reverse iterator pointing to the last element in the this (i.e., its reverse beginning).
 	{
-		return new Reverse_Iterator(vector, size)
+		return new Reverse_Iterator(this, sizes);
 	}
 	
-	Reverse_Iterator rend()//Returns a reverse iterator pointing to the theoretical element preceding the first element in the vector
+	Reverse_Iterator rend()//Returns a reverse iterator pointing to the theoretical element preceding the first element in the this
 	{
-		return new Reverse_Iterator(&vector, -1);
+		return new Reverse_Iterator(&this, -1);
 	}
 	
-	void assign (Iterator first, Iterator last)//Assigns new contents to the vector, replacing its current contents, and modifying its size accordingly.
+	void assign (Iterator first, Iterator last)//Assigns new contents to the vector, replacing its current contents, and modifying its sizes accordingly.
 	{
-		size_t n = first::index() - last::index();
-		if (capacity < n)
+		size_t n = first.index() - last.index();
+		if (cap < n)
 			reserve(n);
-		else if (size < n)
-			size = n;
+		else if (sizes < n)
+			sizes = n;
 		int i = 0;
 		for (first; first != last; first++)
 		{
@@ -280,43 +262,43 @@ public:
 		return first;
 	}
 	
-	void assign (size_t n, const value_type& val)
+	void assign (size_t n, const T& val)
 	{
-		if (n > capacity)
+		if (n > cap)
 			reserve(n);
 		for(size_t i = 0; i < n; i++)
 		{
 			ptr[i] = val;	
 		}
-		size = n;
+		sizes = n;
 	}
 	
-	void push_back (const value_type& val) //Adds a new element at the end of the vector, after its current last element
+	void push_back (const T& val) //Adds a new element at the end of the vector, after its current last element
 	{
-		if (size == capacity)
-			reserve(size + 1);
-		ptr[size + 1] = val;
+		if (sizes == cap)
+			reserve(sizes + 1);
+		ptr[sizes + 1] = val;
 	}
 	
-	void pop_back()//Removes the last element in the vector, effectively reducing the container size by one4
+	void pop_back()//Removes the last element in the vector, effectively reducing the container sizes by one4
 	{
-		delete ptr[size];
-		size--;
+		delete ptr[sizes];
+		sizes--;
 	}
 	
-	void clear()//Removes all elements from the vector (which are destroyed), leaving the container with a size of 0.4
+	void clear()//Removes all elements from the vector (which are destroyed), leaving the container with a sizes of 0.4
 	{
-		for (size_t i = size; i > 0; i--)
+		for (size_t i = sizes; i > 0; i--)
 			delete ptr[i];
-		size = 0;
+		sizes = 0;
 	}
 	
 	void swap (vector& x) //Exchanges the content of the container by the content of x, which is another vector object of the same type
 	{
-		vector tmp1 = new vector(vector);
-		vector tmp2 = new vector(x);
-		x = tmp1;
-		vector = tmp2;
+		vector tmp1 = new vector(this);
+		vector tmp2 = new vector(*x);
+		*x = tmp1;
+		this = tmp2;
 	}
 	
 };
