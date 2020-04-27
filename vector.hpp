@@ -6,7 +6,7 @@
 /*   By: jjosephi <jjosephi@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/25 00:03:05 by jjosephi          #+#    #+#             */
-/*   Updated: 2020/04/26 20:42:13 by jjosephi         ###   ########.fr       */
+/*   Updated: 2020/04/26 20:57:53 by jjosephi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <cstdlib>
 #include <memory>
 
-template <typename T>
+template <typename T, class Allocator = std::allocator<T>>
 class vector
 {
 	class Iterator
@@ -111,7 +111,7 @@ public:
 	using reference  = T&;
 	using value_type = T;
 	
-	vector(Allocator& alloc = T) { ptr = nullptr, size = 0, capacity = 0} //Constructor
+	vector(Allocator& alloc = T) { ptr = nullptr, size = 0, capacity = 0;} //Constructor
 	
 	~vector();							//Destructor
 	
@@ -148,7 +148,7 @@ public:
 		capacity = n;
 		ptr = Allocator.allocate(n);
 		if (n > 0)
-			for (i = 0; i++; i <n)
+			for (size_t i = 0; i < n; i++)
 				ptr[n] = val;
 	}
 	
@@ -158,8 +158,6 @@ public:
 	
 	
 	size_t size(){return size;}//Returns the number of elements in the vector.
-	
-	size_t max_size() {return ??;}//Returns the maximum number of elements that the vector can hold.
 	
 	bool empty() {return size == 0;}//is size 0?
 	
@@ -183,9 +181,9 @@ public:
 		if (n > capacity)
 		{
 			T* tmp = new T[n];
-			std::copy(ptr, ptr + capacity, tmo)
+			std::copy(ptr, ptr + capacity, tmp);
 			delete[] ptr;
-			capcity = n;
+			capacity = n;
 		}
 	}
 	
@@ -199,9 +197,9 @@ public:
 	{
 		if (x::size() > this.size)
 			resize(x::size());
-		for(i = 0; i++; i < x::size())
+		for(size_t i = 0; i++; i < x::size())
 		{
-			vector[i] = x[i];
+			ptr[i] = x[i];
 		}
 		size = x::size();
 	}
@@ -225,7 +223,7 @@ public:
         {
             ptr[i] = ptr[i - n];
         }
-        fo r(size_t i = pos; i < pos + n; i++)
+        for(size_t i = pos; i < pos + n; i++)
         {
             ptr[i] = val;
         }
@@ -246,7 +244,7 @@ public:
 	Iterator erase (size_t n)
 	{
 		if (n > capacity)
-			return nullptr
+			return nullptr;
 		delete ptr[n];
         for(size_t i = n; i < size - 1; i++)
         {
@@ -263,7 +261,7 @@ public:
 	
 	Reverse_Iterator rend()//Returns a reverse iterator pointing to the theoretical element preceding the first element in the vector
 	{
-		return new Reverse_Iterator(vector, -1);
+		return new Reverse_Iterator(&vector, -1);
 	}
 	
 	void assign (Iterator first, Iterator last)//Assigns new contents to the vector, replacing its current contents, and modifying its size accordingly.
@@ -274,9 +272,9 @@ public:
 		else if (size < n)
 			size = n;
 		int i = 0;
-		for (first; first++; first != last)
+		for (first; first != last; first++)
 		{
-			vector[i];
+			ptr[i] = first[i];
 			i++;
 		}
 		return first;
@@ -286,7 +284,7 @@ public:
 	{
 		if (n > capacity)
 			reserve(n);
-		for(size_t i = 0; i++; i < n)
+		for(size_t i = 0; i < n; i++)
 		{
 			ptr[i] = val;	
 		}
@@ -308,18 +306,18 @@ public:
 	
 	void clear()//Removes all elements from the vector (which are destroyed), leaving the container with a size of 0.4
 	{
-		for (size_t i = size; i--; i > 0)
+		for (size_t i = size; i > 0; i--)
 			delete ptr[i];
 		size = 0;
 	}
 	
 	void swap (vector& x) //Exchanges the content of the container by the content of x, which is another vector object of the same type
-	[
+	{
 		vector tmp1 = new vector(vector);
 		vector tmp2 = new vector(x);
 		x = tmp1;
 		vector = tmp2;
-	]
+	}
 	
 };
 
