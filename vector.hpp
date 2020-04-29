@@ -6,7 +6,7 @@
 /*   By: jjosephi <jjosephi@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/25 00:03:05 by jjosephi          #+#    #+#             */
-/*   Updated: 2020/04/27 01:37:07 by jjosephi         ###   ########.fr       */
+/*   Updated: 2020/04/29 02:12:55 by jjosephi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,79 +16,79 @@
 #include <cstdlib>
 #include <memory>
 
+namespace ft
+{
+	
 template <typename T, typename Allocator = std::allocator<T> >
 class vector
 {
-	class Iterator
+	class vect_Iterator
 {
 
 private:
     vector<T>* v;
     int        i;
 public:
-    Iterator():                    v(NULL), i(0) {}   
-    Iterator(vector<T>* v, int i): v(v),       i(i) {}
+    vect_Iterator():                    v(NULL), i(0) {}   
+    vect_Iterator(vector<T>* v, int i): v(v),       i(i) {}
 
     T&       operator*()             {return (*v)[i];}
     T*         operator->()            {return &((*v)[i]);}
     T&       operator[](int m)       {return (*v)[i + m];}
 
 
-    Iterator& operator++()       {++i;return *this;}
-    Iterator& operator--()       {--i;return *this;}
-    Iterator  operator++(int)    {Iterator r(*this);++i;return r;}
-    Iterator  operator--(int)    {Iterator r(*this);--i;return r;}
+    vect_Iterator& operator++()       {++i;return *this;}
+    vect_Iterator& operator--()       {--i;return *this;}
+    vect_Iterator  operator++(int)    {vect_Iterator r(*this);++i;return r;}
+    vect_Iterator  operator--(int)    {vect_Iterator r(*this);--i;return r;}
 
-    Iterator& operator+=(int n)  {i += n;return *this;}
-    Iterator& operator-=(int n)  {i -= n;return *this;}
+    vect_Iterator& operator+=(int n)  {i += n;return *this;}
+    vect_Iterator& operator-=(int n)  {i -= n;return *this;}
 
-    Iterator operator+(int n)   const {Iterator r(*this);return r += n;}
-    Iterator operator-(int n)   const {Iterator r(*this);return r -= n;}
+    vect_Iterator operator+(int n)   const {vect_Iterator r(*this);return r += n;}
+    vect_Iterator operator-(int n)   const {vect_Iterator r(*this);return r -= n;}
 
-    bool operator<(Iterator const& r)  const {return i <  r.i;}
-    bool operator<=(Iterator const& r) const {return i <= r.i;}
-    bool operator>(Iterator const& r)  const {return i >  r.i;}
-    bool operator>=(Iterator const& r) const {return i >= r.i;}
-    bool operator!=(const Iterator &r) const {return i != r.i;}
-    bool operator==(const Iterator &r) const {return i == r.i;}
+    bool operator<(vect_Iterator const& r)  const {return i <  r.i;}
+    bool operator<=(vect_Iterator const& r) const {return i <= r.i;}
+    bool operator>(vect_Iterator const& r)  const {return i >  r.i;}
+    bool operator>=(vect_Iterator const& r) const {return i >= r.i;}
+    bool operator!=(const vect_Iterator &r) const {return i != r.i;}
+    bool operator==(const vect_Iterator &r) const {return i == r.i;}
 	size_t index(){return i;}
 };
-class Reverse_Iterator
+class Reverse_vect_Iterator
 {
 
 private:
     vector<T>* v;
     int        i;
 public:
-    using T = T;
-    using T*    = T*;
-    using T&  = T&;
 
-   Reverse_Iterator():                    v(NULL), i(0) {}   
-   Reverse_Iterator(vector<T>* v, int i): v(v),       i(i) {}
+   Reverse_vect_Iterator():                    v(NULL), i(0) {}   
+   Reverse_vect_Iterator(vector<T>* v, int i): v(v),       i(i) {}
 
     T&       operator*()             {return (*v)[i];}
     T*         operator->()            {return &((*v)[i]);}
     T&       operator[](int m)       {return (*v)[i + m];}
 
 
-   Reverse_Iterator& operator++()       {--i;return *this;}
-   Reverse_Iterator& operator--()       {++i;return *this;}
-   Reverse_Iterator  operator++(int)    {Iterator r(*this);--i;return r;}
-   Reverse_Iterator  operator--(int)    {Iterator r(*this);++i;return r;}
+   Reverse_vect_Iterator& operator++()       {--i;return *this;}
+   Reverse_vect_Iterator& operator--()       {++i;return *this;}
+   Reverse_vect_Iterator  operator++(int)    {vect_Iterator r(*this);--i;return r;}
+   Reverse_vect_Iterator  operator--(int)    {vect_Iterator r(*this);++i;return r;}
 
-   Reverse_Iterator& operator+=(int n)  {i -= n;return *this;}
-   Reverse_Iterator& operator-=(int n)  {i += n;return *this;}
+   Reverse_vect_Iterator& operator+=(int n)  {i -= n;return *this;}
+   Reverse_vect_Iterator& operator-=(int n)  {i += n;return *this;}
 
-   Reverse_Iterator operator+(int n)   const {Iterator r(*this);return r -= n;}
-   Reverse_Iterator operator-(int n)   const {Iterator r(*this);return r += n;}
+   Reverse_vect_Iterator operator+(int n)   const {vect_Iterator r(*this);return r -= n;}
+   Reverse_vect_Iterator operator-(int n)   const {vect_Iterator r(*this);return r += n;}
 
-    bool operator<(Iterator const& r)  const {return i <  r.i;}
-    bool operator<=(Iterator const& r) const {return i <= r.i;}
-    bool operator>(Iterator const& r)  const {return i >  r.i;}
-    bool operator>=(Iterator const& r) const {return i >= r.i;}
-    bool operator!=(Reverse_Iterator &r) const {return i != r.i;}
-    bool operator==(Reverse_Iterator &r) const {return i == r.i;}
+    bool operator<(vect_Iterator const& r)  const {return i <  r.i;}
+    bool operator<=(vect_Iterator const& r) const {return i <= r.i;}
+    bool operator>(vect_Iterator const& r)  const {return i >  r.i;}
+    bool operator>=(vect_Iterator const& r) const {return i >= r.i;}
+    bool operator!=(Reverse_vect_Iterator &r) const {return i != r.i;}
+    bool operator==(Reverse_vect_Iterator &r) const {return i == r.i;}
 	size_t index(){return i;}
 };
 private:
@@ -97,8 +97,6 @@ private:
 	T *ptr;
 	Allocator al;
 public:
-	using T&  = T&;
-	using T = T;
 	
 	vector(Allocator& al = Allocator())
 	{
@@ -110,7 +108,7 @@ public:
 	~vector()
 	{
 	//	delete[] ptr;
-		ptr = al.deallocate(ptr, sizes);
+		al.deallocate(ptr, sizes);
 		ptr = NULL;
 		sizes = 0;
 		cap = 0;
@@ -129,18 +127,20 @@ public:
 		cap = n;
 		ptr = al.allocate(n);
 		if (n > 0)
+		{
 			for (size_t i = 0; i < n; i++)
-				ptr[n] = val;
+				ptr[i] = val;
+		}
 	}
 	
-	Iterator begin(){return new Iterator(this, 0);}// Returns an iterator pointing to the first element in the this.
+	vect_Iterator begin(){return new vect_Iterator(this, 0);}// Returns an vect_Iterator pointing to the first element in the this.
 	
-	Iterator end(){return new Iterator(this, sizes);}//Returns an iterator referring to the past-the-end element in the vector container.
+	vect_Iterator end(){return new vect_Iterator(this, sizes);}//Returns an vect_Iterator referring to the past-the-end element in the vector container.
 	
 	
 	size_t size(){return sizes;}//Returns the number of elements in the vector.
 	
-	bool empty() {return sizes == 0;}//is sizes 0?
+	bool empty() {return sizes <= 0;}//is sizes 0?
 	
 	void resize(size_t n)//Resizes the container so that it contains n elements.
 	{
@@ -161,48 +161,60 @@ public:
 	{
 		if (n > cap)
 		{
-			T* tmp = new T[n];
+			T* tmp = al.allocate(n);
 			std::copy(ptr, ptr + cap, tmp);
 			delete[] ptr;
+			ptr = tmp;
 			cap = n;
 		}
 	}
 	
 	T& front() {return ptr[0];}//Returns a T& to the first element in the vector.
 	
-	T& back() {return ptr[sizes];}//back
+	T& back() {return ptr[sizes - 1];}//back
 	
-	T& operator[] (size_t n){return ptr[n];}//Returns a T& to the element at position n in the vector container.
+	T& operator[] (size_t n)
+	{
+		if (n > sizes)
+			std::__throw_out_of_range("Index is out of range");
+		return ptr[n];
+	}//Returns a T& to the element at position n in the vector container.
 	
 	vector& operator= (vector& x) //Assigns new contents to the container, replacing its current contents, and modifying its sizes accordingly
 	{
 		if (x.size() > sizes)
 			resize(x.size());
-		for(size_t i = 0; i++; i < x.size())
+		for(size_t i = 0;i < x.size();i++)
 		{
 			ptr[i] = x[i];
 		}
 		sizes = x.size();
+		return *this;
 	}
 	
 	T& at (size_t n)//Position of an element in the container. OOR exceptions
 	{
 		if (n >= sizes)
 			std::out_of_range("");
-		else
-			return ptr[n];
+		return ptr[n];
 	}
 	
 	
 	//The vector is extended by inserting new elements before the element at the specified position
-	void insert (size_t& pos, size_t& n, T& val)
+	void insert (size_t pos, size_t n, T val)
 	{
-		if (sizes < n + cap)
-            reserve(sizes + n);
-        sizes += n;
-        for (size_t i = sizes - 1; i >= pos + n; i--)
+		if (pos + n > cap)
+			reserve((sizes = pos + n));
+		else if(pos + n> sizes)
+            sizes = pos + n;
+		else if (cap == sizes)
+		{
+			reserve(sizes += n);
+		}
+		printf("End\n");
+        for (size_t i = 0; i < n; i--)
         {
-            ptr[i] = ptr[i - n];
+            ptr[pos + i + n] = ptr[pos + i] ;
         }
         for(size_t i = pos; i < pos + n; i++)
         {
@@ -212,41 +224,47 @@ public:
 	
     void insert (size_t pos, const T& val)
 	{
-		if(cap == sizes)
-            reserve(++sizes);
+		if (pos > cap)
+			reserve((sizes = pos));
+		else if(pos > sizes)
+            sizes = pos;
+		else if (cap == sizes)
+		{
+			reserve(++sizes);
+		}
         for(size_t i = sizes - 1; i > pos; i--)
         {
-            ptr[i]=ptr[i-1];
+            ptr[i] = ptr[i-1];
         }
         ptr[pos] = val;
 	}
 
 	//Removes from the vector either a single element (position) or a range of elements ([first,last)).
-	Iterator erase (size_t n)
+	vect_Iterator erase (size_t n)
 	{
 		size_t i = n;
+		vect_Iterator it;
 		if (n > cap)
-			return NULL;
-		delete ptr[n];
+			return (it = vect_Iterator());
         for(i = n; i < sizes - 1; i++)
         {
             ptr[i] = ptr[i + 1];   //  Shift all the elements one step left, beginning from "pos+1"
         }
         sizes--;
-		return new Iterator(this, i);
+		return (it = vect_Iterator(this, i));
 	}
 	
-	Reverse_Iterator rbegin()//Returns a reverse iterator pointing to the last element in the this (i.e., its reverse beginning).
+	Reverse_vect_Iterator rbegin()//Returns a reverse vect_Iterator pointing to the last element in the this (i.e., its reverse beginning).
 	{
-		return new Reverse_Iterator(this, sizes);
+		return new Reverse_vect_Iterator(this, sizes);
 	}
 	
-	Reverse_Iterator rend()//Returns a reverse iterator pointing to the theoretical element preceding the first element in the this
+	Reverse_vect_Iterator rend()//Returns a reverse vect_Iterator pointing to the theoretical element preceding the first element in the this
 	{
-		return new Reverse_Iterator(&this, -1);
+		return new Reverse_vect_Iterator(&this, -1);
 	}
 	
-	void assign (Iterator first, Iterator last)//Assigns new contents to the vector, replacing its current contents, and modifying its sizes accordingly.
+	void assign (vect_Iterator first, vect_Iterator last)//Assigns new contents to the vector, replacing its current contents, and modifying its sizes accordingly.
 	{
 		size_t n = first.index() - last.index();
 		if (cap < n)
@@ -262,47 +280,53 @@ public:
 		return first;
 	}
 	
-	void assign (size_t n, const T& val)
+	void assign (size_t n, T val)
 	{
 		if (n > cap)
 			reserve(n);
 		for(size_t i = 0; i < n; i++)
 		{
-			ptr[i] = val;	
+			ptr[i] = val;
 		}
-		sizes = n;
+		if (sizes < n)
+			sizes = n;
 	}
 	
-	void push_back (const T& val) //Adds a new element at the end of the vector, after its current last element
+	void push_back (T val) //Adds a new element at the end of the vector, after its current last element
 	{
 		if (sizes == cap)
 			reserve(sizes + 1);
-		ptr[sizes + 1] = val;
+		ptr[++sizes - 1] = val;
+
 	}
 	
 	void pop_back()//Removes the last element in the vector, effectively reducing the container sizes by one4
 	{
-		delete ptr[sizes];
 		sizes--;
 	}
 	
 	void clear()//Removes all elements from the vector (which are destroyed), leaving the container with a sizes of 0.4
 	{
 		for (size_t i = sizes; i > 0; i--)
-			delete ptr[i];
-		sizes = 0;
+			ptr[i] = 0;
+		this->sizes = 0;
 	}
 	
 	void swap (vector& x) //Exchanges the content of the container by the content of x, which is another vector object of the same type
 	{
-		vector tmp1 = new vector(this);
-		vector tmp2 = new vector(*x);
-		*x = tmp1;
-		this = tmp2;
+		T* tmp1 = ptr;
+		size_t tmp_size = sizes;
+		size_t tmp_cap = cap;
+		
+		ptr = x.ptr;
+		x.ptr = tmp1;
+		sizes = x.sizes;
+		x.sizes = tmp_size;
+		cap = x.cap;
+		x.cap = tmp_cap;
 	}
 	
 };
-
-
+}
 
 #endif
