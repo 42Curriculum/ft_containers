@@ -6,7 +6,7 @@
 /*   By: jjosephi <jjosephi@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/26 15:14:15 by jjosephi          #+#    #+#             */
-/*   Updated: 2020/04/29 05:00:50 by jjosephi         ###   ########.fr       */
+/*   Updated: 2020/04/30 12:07:02 by jjosephi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,7 @@ public:
 
     Iterator&	operator++()
 	{
-		
-			curr = curr->next;
-		printf("curre %d\n", curr->content);
+		curr = curr->next;
 		return *this;}
     Iterator&	operator--()       {curr = curr->prev; return *this;}
 	bool		operator!= (Iterator &r) {return (curr->content != r.curr->content );}
@@ -85,12 +83,14 @@ public:
 		head->next = NULL;
 		head->content = val;
 		head->prev = NULL;
+		tail = head;
 		alloc = Allocator();
-		sizes = n;
-		for(size_t i = 0; i < n;i++)
+		for(size_t i = 0; i < n - 1;i++)
 		{
 			push_back(val);
 		}
+		sizes = n;
+
 	}
 
 	list (const list& x)
@@ -119,12 +119,12 @@ public:
 		node* current = head;
 		for (size_t i = 0;i < sizes;i++)
 		{
-			current->prev = nullptr;
+			current->prev = NULL;
 			current = current->next;
 		}
 		sizes = 0;
-		head = nullptr;
-		tail = nullptr;
+		head = NULL;
+		tail = NULL;
 	}
 
 	list& operator= (const list& x)
@@ -177,12 +177,13 @@ public:
 		{
 			size_t diff = sizes - n;
 			node* current = tail;
-			for (size_t i = diff; i > 0; i++)
+			for (size_t i = 0; i < diff; i++)
 			{
-				current->next = nullptr;
+				current->next = NULL;
 				current = current->prev;
 				delete current->next;
 			}
+			tail = current;
 		}
 		sizes = n;
 	}
@@ -195,7 +196,6 @@ public:
 			resize(n);
 		for (size_t i = 0; i < n; i++)
 		{
-			printf("End %d \n", current->content);
 			current = current->next;
 		}
 		current->content = content;
@@ -229,11 +229,20 @@ public:
 
 	Iterator erase(Iterator position)
 	{
+		Iterator it = this->begin();
 		node* tmp = head;
-		node* hold;
-		for (size_t i = 0; i < position.i; i++)
+		for (; it.operator!=(position); it.operator++())
+		{
 			tmp = tmp->next;
-		new Iterator(tmp);
+		}
+		if (tmp->prev)
+			tmp->prev->next = tmp->next;
+		else
+			head = tmp->next;
+		delete tmp;
+		Iterator ret(tmp->next);
+		sizes--;
+		return ret;
 	}
 	
 	Iterator erase(Iterator first, Iterator last)
@@ -261,14 +270,19 @@ public:
 		n->prev = tail;
 		n->next = NULL;
 		tail = n;
+		sizes++;
 	}
 
 	void pop_back()
 	{
+		if (sizes > 0)
+		{
 		node *curr = tail;
 		curr = tail->prev;
 		delete tail;
 		tail = curr;
+		sizes--;
+		}
 	}
 
 	void push_front (const T& content)
@@ -278,14 +292,19 @@ public:
 		f->next = head;
 		f->content = content;
 		head = f;
+		sizes++;
 	}
 
 	void pop_front()
 	{
+		if (sizes > 0)
+		{
 		node* tmp = head->next;
-		head->next = nullptr;
+		head->next = NULL;
 		delete head;
 		head = tmp;
+		sizes--;
+		}
 	}
 
 	void clear()
@@ -301,7 +320,8 @@ public:
 	void swap (list& x)
 	{
 		node* tmp;
-		node* xtmp = x.front();
+		node* xtmp = x.head;
+		node* xtmpt = x.tail;
 		tmp = head;
 		T ctm;
 		for (size_t i = 0; i < x.size(); i++)
@@ -312,6 +332,14 @@ public:
 			tmp = tmp->next;
 			xtmp = xtmp->next;
 		}
+		size_t stm = sizes;
+		sizes = x.sizes;
+		x.sizes = stm;
+		xtmp = head;
+		head = x.head;
+		x.head = xtmp;
+		x.tail = tail;
+		tail = xtmpt;
 	}
 
 	void splice (Iterator position, list& x)
@@ -348,55 +376,79 @@ public:
 
 	void unique()
 	{
-		T content;
-		node* current = head;		
-		for (size_t i = 0; i < sizes;i++)
+		T val;
+		node* current = head;
+		node* tmp;
+		node* hold;
+		val = current->content;
+		for (size_t i = 0; i < sizes; i++)
 		{
-			node* sw = current;
-			content = current->content;
-			for (size_t i = 0; i < sizes;i++)
+			if (!current->next)
 			{
-				node *tmp = sw->next;
-				if (sw->content == content)
-				{
-					sw->prev->next = sw->next;
-					sw->next->prev =  sw->prev;
-					delete sw->content;
-				}
-				sw = tmp;
+				tail = current;
+				return ;
 			}
-			current->content = content;
 			current = current->next;
+			tmp = current;
+			for(size_t n = 0; n < sizes - (i + 1); n++)
+			{
+				if (tmp->next)
+					hold = tmp->next;
+				if (tmp->content == val)
+				{
+					if (tmp->prev)
+					{
+						tmp->prev->next = tmp->next;
+					}
+					else
+						head = tmp->next;
+					if (tmp->next)
+						tmp->next->prev = tmp->prev;
+					else
+						tail = tmp->prev;
+					delete tmp;
+					sizes--;
+				}
+				tmp = hold;
+				if (tmp->next)
+					tmp = tmp->next;
+			}
+			val = current->content;
 		}
 	}
 
 	void merge (list& x)
 	{
-		tail->next = x.front();
+		tail->next = x.head;
 		this->sort();
-		x->front = nullptr;
-		x->resize(0);
+		x.head = NULL;
+		x.resize(0);
 	}
 
 	void sort()
 	{
 		T content;
-		node* current = head;		
+		T tmp;
+		node* current = head;
+		node* sw;	
 		for (size_t i = 0; i < sizes; i++)
 		{
-			node* sw = current;
+			sw = current;
 			content = current->content;
-			for (size_t i = 0; i < sizes;i++)
+			for (size_t n = 0; n <= sizes - i;n++)
 			{
 				if (sw->content < content)
 				{
-					T tmp = content;
+					tmp = content;
 					content = sw->content;
 					sw->content = tmp;
+					current->content = content;
 				}
-				sw = sw->next;
+				if (sw->next)
+					sw = sw->next;
+				else
+					break ;
 			}
-			current->content = content;
 			current = current->next;
 		}
 	}
@@ -405,10 +457,12 @@ public:
 	{
 		node *current = tail;
 		node *tmp;
-		while (current->previous)
+		tail = head;
+		head = current;
+		while (current->prev)
 		{
-			tmp = current->previous;
-			current->previous = current->next;
+			tmp = current->prev;
+			current->prev = current->next;
 			current->next = tmp;
 			current = current->next;
 		}
