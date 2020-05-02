@@ -6,7 +6,7 @@
 /*   By: jjosephi <jjosephi@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/26 21:52:05 by jjosephi          #+#    #+#             */
-/*   Updated: 2020/04/28 19:17:33 by jjosephi         ###   ########.fr       */
+/*   Updated: 2020/04/30 23:59:09 by jjosephi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ class queue {
 		head->previous = NULL;
 		tail = head;
 		al = all;
+		capacity = 1;
 	}
 
 	~queue()
@@ -52,7 +53,10 @@ class queue {
 		{
 			tmp = h;
 			al.destroy(tmp);
-			h = h->next;
+			if (h->previous)
+				h = h->previous;
+			else
+				return  ;
 		}
 	}
 
@@ -70,15 +74,22 @@ class queue {
 		n->val = val;
 		tail->previous = n;
 		n->previous = NULL;
+		tail = n;
+		capacity++;
 	}
 
 	void pop()
 	{
 		node* curr;
 		
+		if (capacity >0)
+		{
+			
 		curr = head;
 		head = head->previous;
 		delete curr;
+		capacity--;
+		}
 	}
 };
 }

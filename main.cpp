@@ -6,7 +6,7 @@
 /*   By: jjosephi <jjosephi@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/28 19:01:31 by jjosephi          #+#    #+#             */
-/*   Updated: 2020/04/30 12:26:30 by jjosephi         ###   ########.fr       */
+/*   Updated: 2020/05/01 19:23:25 by jjosephi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -300,7 +300,7 @@ it1 = lst2.begin();
 
 it1 = lst.begin();
 	end = lst.end();
-	printf("After\n lst1 :");
+	printf("\n After\n lst1 : ");
 	for (; it1.operator!=(end) ; it1.operator++() )
 	{
 		printf("%d ", *it1.operator->());
@@ -313,48 +313,127 @@ it1 = lst.begin();
 	{
 		printf("%d ", *it1.operator->());
 	}
-	printf("%d ", *it1.operator->());
+	printf("%d \n Merge lists:", *it1.operator->());
 	
-	//lst2.merge(lst);
+	lst2.merge(lst);
 	
 	it1 = lst2.begin();
 	end = lst2.end();
-	for (; it1.operator!=(end) ; it1.operator++() )
+	for (size_t i = 0; i < lst2.size() ; i++)
 	{
 		printf("%d ", *it1.operator->());
+		it1.operator++();
 	}
-	printf("%d ", *it1.operator->());
 
 	
 	printf("\n\nMap tests---------------------------------------\n\n");
 
-	//ft::map<int, int> mp();
+	ft::map<int, int> mp{};
+	ft::map<int, int> mp2{};
+	ft::map<int, int>::Iterator it;
+	ft::map<int, int>::Iterator en;
+	mp.insert(42, 1);
+	mp.insert(32, 2);
+	mp.insert(12, 3);
+	mp.insert(22, 4);
+	it = mp.begin();
 
+	mp2.insert(24, 42);
+	mp2.insert(23, 43);
 	
+	printf("Inserted 4 elements in map1; Size %zu\n", mp.size());
+	for (size_t i = 0; i < mp.size() ; i++)
+	{
+	//	printf("(Key : %d Value : %d)\n", *it.operator->(), mp.operator[](0));
+		printf("(Key : %d Value : %d)  ", *it.operator->(), mp.operator[](*it.operator->()));
+		it.operator++();
+	}
+	
+	it = mp2.begin();
+	printf("\nInserted 2 elements in map2; Size %zu\n", mp2.size());
+	for (size_t i = 0; i < mp2.size() ; i++)
+	{
+		printf("(Key : %d Value : %d)  ", *it.operator->(), mp2.operator[](*it.operator->()));
+		it.operator++();
+	}
+	printf("\nValue of key 12: %d\n",mp.operator[](12));
+	printf("Number of key55 : %zu, number of key 32 %zu\n", mp.count(55), mp.count(32));
+	mp.erase(32);
+	printf("Erased key 32\n");
+
+	it = mp.begin();
+	for (size_t i = 0; i < mp.size() ; i++)
+	{
+		printf("Key : %d Value : %d   ", *it.operator->(), mp.operator[](*it.operator->()));
+		it.operator++();
+	}
+
+	printf("\nOperator = (map1 = map2)\n");
+
+	printf("Before :\n Map1: ");
+	it = mp.begin();
+	for (size_t i = 0; i < mp.size() ; i++)
+	{
+		printf("Key : %d Value : %d   ", *it.operator->(), mp.operator[](*it.operator->()));
+		it.operator++();
+	}
+
+	printf("\nMap2: ");
+	it = mp2.begin();
+	for (size_t i = 0; i < mp2.size() ; i++)
+	{
+		printf("Key : %d Value : %d   ", *it.operator->(), mp2.operator[](*it.operator->()));
+		it.operator++();
+	}
+
+	 
+	mp.operator=(mp2);
+
+	printf("\nAfter :\n Map1: ");
+	it = mp.begin();
+	for (size_t i = 0; i < mp.size() ; i++)
+	{
+		printf("Key : %d Value : %d   ", *it.operator->(), mp.operator[](*it.operator->()));
+		it.operator++();
+	}
+
+printf("\nMap2: ");
+	it = mp2.begin();
+	for (size_t i = 0; i < mp2.size() ; i++)
+	{
+		printf("Key : %d Value : %d   ", *it.operator->(), mp2.operator[](*it.operator->()));
+		it.operator++();
+	}
+	printf("Clearing map2\n");
+	mp2.clear();
+	it = mp.begin();
+	en = mp.end();
+		printf("Is map 2 empty? %d\n",mp2.empty());
+
 	
 	printf("\n\nStack tests---------------------------------------\n\n");
 
-	// ft::Stack<int> tea();
+	ft::stack<int> tea(1);
 
-	// printf("Is the queue empty? %d",tea.empty());
-	// tea.push(42);
-	// tea.push(69);
-	// printf("Pushed 42 and 69. Size = %d",tea.size());
-	// printf("Front value %d", tea.front());
-	// printf("back Value %d", tea.back());
-	// tea.pop();
-	// printf("Pop() teat. First : %d, last: %d , size : %d", tea.front(), tea.back(), tea.size());
+	printf("Is the queue empty? %d\n",tea.empty());
+	tea.push(42);
+	tea.push(69);
+	printf("Pushed 42 and 69. Size = %zu\n",tea.size());
+	printf("Front value %d\n", tea.front());
+	printf("back Value %d\n", tea.back());
+	tea.pop();
+	printf("Pop() teat. First : %d, last: %d , size : %zu\n", tea.front(), tea.back(), tea.size());
 	
-	// printf("\n\nQueue tests---------------------------------------\n\n");
+	printf("\n\nQueue tests---------------------------------------\n\n");
 
-	// ft::queue<int> tes();
+	ft::queue<int> tes(0);
 
-	// printf("Is the queue empty? %d",tes.empty());
-	// tes.push(42);
-	// tes.push(69);
-	// printf("Pushed 42 and 69. Size = %d",tes.size());
-	// printf("Front value %d", tes.front());
-	// printf("back Value %d", tes.back());
-	// tes.pop();
-	// printf("Pop() test. First : %d, last: %d , size : %d", tes.front(), tes.back(), tes.size());
+	printf("Is the queue empty? %d\n",tes.empty());
+	tes.push(42);
+	tes.push(69);
+	printf("Pushed 42 and 69. Size = %zu\n",tes.size());
+ 	printf("Front value %d\n", tes.front());
+	printf("back Value %d\n", tes.back());
+ 	tes.pop();
+	printf("Pop() test. First : %d, last: %d , size : %zu\n", tes.front(), tes.back(), tes.size());
 }

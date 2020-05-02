@@ -6,7 +6,7 @@
 /*   By: jjosephi <jjosephi@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/26 15:14:15 by jjosephi          #+#    #+#             */
-/*   Updated: 2020/04/30 12:07:02 by jjosephi         ###   ########.fr       */
+/*   Updated: 2020/05/01 02:36:36 by jjosephi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ class list
 
 	public :
 
-	class Iterator
+class Iterator
 {
 
 private:
@@ -50,10 +50,6 @@ public:
 	{
 		curr = n;
 		i = 0;
-		// if (n->prev)
-		// 	curr->prev = n->prev;
-		// if (n->next)
-		// 	curr->next = n->next;
 	}
 	
     T*			operator->()        {return  &(curr->content);}
@@ -319,27 +315,22 @@ public:
 
 	void swap (list& x)
 	{
-		node* tmp;
-		node* xtmp = x.head;
-		node* xtmpt = x.tail;
-		tmp = head;
-		T ctm;
-		for (size_t i = 0; i < x.size(); i++)
-		{
-			ctm = xtmp->content;
-			xtmp->content = tmp->content;
-			tmp->content = ctm;
-			tmp = tmp->next;
-			xtmp = xtmp->next;
-		}
-		size_t stm = sizes;
-		sizes = x.sizes;
-		x.sizes = stm;
-		xtmp = head;
+		node* tmp = new node();
+		node* tmps = new node();
+		tmp->content = head->content;
+		tmp->next = head->next;
+		tmps->prev = tail->prev;
+		tmps->content = tail->content;
+
 		head = x.head;
-		x.head = xtmp;
-		x.tail = tail;
-		tail = xtmpt;
+		x.head = tmp;
+		tail = x.tail;
+		x.tail = tmps;
+		
+	
+		size_t s = sizes;
+		sizes = x.sizes;
+		x.sizes = s;
 	}
 
 	void splice (Iterator position, list& x)
@@ -419,11 +410,12 @@ public:
 
 	void merge (list& x)
 	{
-		tail->next = x.head;
-		this->sort();
-		x.head = NULL;
-		x.resize(0);
-	}
+		node* curr = x.head;
+	
+		tail->next = curr;
+		tail = x.tail;
+		sizes += x.sizes;
+ 	}
 
 	void sort()
 	{

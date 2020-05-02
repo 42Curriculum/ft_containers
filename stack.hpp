@@ -6,7 +6,7 @@
 /*   By: jjosephi <jjosephi@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/26 21:52:05 by jjosephi          #+#    #+#             */
-/*   Updated: 2020/04/28 19:17:26 by jjosephi         ###   ########.fr       */
+/*   Updated: 2020/05/01 02:25:58 by jjosephi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,90 +20,82 @@
 namespace ft
 {
 	
-template <typename T>
-class Stack {
+template <typename T , class Allocator = std::allocator<T> >
+class stack {
     private:
-        T *arr;
-        size_t top_index;
         size_t capacity;
+		struct node
+		{
+			node* next;
+			T val;
+		};
+    	node* head;
+		node* tail;
+		Allocator al;
 
-    public:
+   	public:
 
-        Stack(size_t max_size = 10);
-
-        ~Stack();
-
-        Stack(const Stack &old_T);
-
-        Stack<T>& operator=(Stack<T> const &old_T);
-        
-        void push(T);
-        void pop();
-        bool empty();
-        T top();
-        size_t size();
-};
-
-template <typename T>
-Stack<T>::Stack(size_t max_size) {
-    arr = new T[max_size];
-    top_index = -1;
-    capacity = max_size;
-}
-template <typename T>
-Stack<T>::~Stack() {
-    delete arr;
-}
-
-template <typename T>
-Stack<T>::Stack(const Stack<T> &old_T) {
-    top_index = old_T.top_index;
-    capacity = old_T.capacity;
-}
-template <typename T>
-Stack<T>& Stack<T>::operator=(Stack<T> const &old_T) {
-    if (this != &old_T) {
-        if (capacity != old_T.capacity) {
-            delete arr;
-            capacity = old_T.capacity;
-            arr = new T[old_T.capacity];
-            top_index = old_T.top_index;
-        }
-        for(size_t i = 0; i < capacity; i++) {
-			arr[i] = old_T[i];
-		}
-    }
-    return *this;
-}
-
-template <typename T>
-void Stack<T>::push(T elem) {
-    top_index++;
-    arr[top_index] = elem;
-}
-
-template <typename T>
-void Stack<T>::pop() {
-	if(capacity > 0)
+	stack (T cont, Allocator all = Allocator())
 	{
-    	destroy(arr[top_index]);
-    	top_index--;
+		head = new node();
+		head->val = cont;
+		head->next = NULL;
+		tail = head;
+		al = all;
+		capacity = 1;
 	}
-}
 
-template <typename T>
-bool Stack<T>::empty() {return capacity == 0;}
+	~stack()
+	{
+		node* h = head;
+		node* tmp;
+		for (size_t i = 0; i < capacity; i++)
+		{
+			tmp = h;
+			al.destroy(tmp);
+			if (h->next)
+				h = h->next;
+			else
+				return  ;
+		}
+	}
 
-template <typename T>
-T Stack<T>::top() {
-    if (capacity > 0)
-        return arr[top_index];  
-} 
+	bool empty() {return capacity == 0;}
+	
+	size_t size() {return capacity;}
+	
+	T& front() {return head->val;}
+	
+	T& back() {return tail->val;}
 
-template <typename T>
-size_t Stack<T>::size() {
-    return (size);
-}
+	void push (const T& val)
+	{
+		node* n = new node();
+		
+		n->val = val;
+		n->next = head;
+		head = n;
+		capacity++;
+	}
+
+	void pop()
+	{
+		node* curr;
+		
+		if (capacity >0)
+		{
+			
+	
+		curr = head;
+			if (head->next)
+			{
+				head = head->next;
+			}
+		delete curr;
+		capacity--;
+		}
+	}
+};
 }
 
 #endif
