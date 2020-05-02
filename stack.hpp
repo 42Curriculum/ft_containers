@@ -6,7 +6,7 @@
 /*   By: jjosephi <jjosephi@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/26 21:52:05 by jjosephi          #+#    #+#             */
-/*   Updated: 2020/05/01 02:25:58 by jjosephi         ###   ########.fr       */
+/*   Updated: 2020/05/01 23:16:56 by jjosephi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ class stack {
 		for (size_t i = 0; i < capacity; i++)
 		{
 			tmp = h;
-			al.destroy(tmp);
+			delete tmp;
 			if (h->next)
 				h = h->next;
 			else

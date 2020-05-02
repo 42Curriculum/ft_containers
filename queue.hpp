@@ -6,7 +6,7 @@
 /*   By: jjosephi <jjosephi@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/26 21:52:05 by jjosephi          #+#    #+#             */
-/*   Updated: 2020/04/30 23:59:09 by jjosephi         ###   ########.fr       */
+/*   Updated: 2020/05/01 23:16:05 by jjosephi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ class queue {
 		for (size_t i = 0; i < capacity; i++)
 		{
 			tmp = h;
-			al.destroy(tmp);
+			delete tmp;
 			if (h->previous)
 				h = h->previous;
 			else

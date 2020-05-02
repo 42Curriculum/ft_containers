@@ -6,7 +6,7 @@
 /*   By: jjosephi <jjosephi@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/28 19:01:31 by jjosephi          #+#    #+#             */
-/*   Updated: 2020/05/01 19:23:25 by jjosephi         ###   ########.fr       */
+/*   Updated: 2020/05/01 23:19:51 by jjosephi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -328,8 +328,8 @@ it1 = lst.begin();
 	
 	printf("\n\nMap tests---------------------------------------\n\n");
 
-	ft::map<int, int> mp{};
-	ft::map<int, int> mp2{};
+	ft::map<int, int> mp;
+	ft::map<int, int> mp2;
 	ft::map<int, int>::Iterator it;
 	ft::map<int, int>::Iterator en;
 	mp.insert(42, 1);
